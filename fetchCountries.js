@@ -1,12 +1,13 @@
-const axios = require('axios');
-
 function fetchCountries(name) {
-  return axios.get(`https://restcountries.com/v3.1/name/${name}`, {
-    params: {
-      name,
-      fields: 'name.official,capital,population,flags.svg,languages',
-    },
-  });
+  const url = `https://restcountries.com/v3.1/name/${name}`;
+
+  return fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Country not found');
+      }
+      return response.json();
+    });
 }
 
 module.exports = fetchCountries;
