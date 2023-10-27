@@ -1,4 +1,4 @@
-const fetchCountries = require('./fetchCountries');
+const fetchCountries = require('fetchCountries');
 const debounce = require('lodash.debounce');
 const Notiflix = require('notiflix');
 
@@ -65,4 +65,4 @@ function displayCountryInfo(country) {
     <p>Languages: ${country.languages.join(', ')}</p>
   `;
 
-  countryInfo.innerHTML = info;} 
+  countryInfo.innerHTML = info;

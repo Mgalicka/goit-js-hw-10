@@ -65,4 +65,5 @@ function displayCountryInfo(country) {
     <p>Languages: ${country.languages.join(', ')}</p>
   `;
 
-  countryInfo.innerHTML = info;} 
+  countryInfo.innerHTML = info;
+}
