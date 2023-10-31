@@ -1,56 +1,53 @@
-import './css/styles.css';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { fetchCountries } from './fetchCountries';
-var debounce = require('lodash.debounce');
-
-const DEBOUNCE_DELAY = 300;
-const countryListEl = document.querySelector('ul.country-list');
-countryListEl.previousElementSibling.addEventListener(
-  'input',
-  debounce(onInput, DEBOUNCE_DELAY)
-);
-
-function onInput() {
-  const nameCountry = countryListEl.previousElementSibling.value.trim();
-  if (nameCountry === '' || nameCountry === ' ') {
-    countryListEl.nextElementSibling.innerHTML = '';
-    countryListEl.innerHTML = '';
-    return;
-  } else {
-    fetchCountries(nameCountry)
-      .then(country => {
-        if (country.length > 10) {
-          Notify.info(
-            'Too many matches found. Please enter a more specific name.'
-          );
-          countryListEl.innerHTML = '';
-          countryListEl.nextElementSibling.innerHTML = '';
-        } else if (country.length > 2 && country.length <= 10) {
-          countryListEl.nextElementSibling.innerHTML = '';
-          countryListEl.innerHTML = country
-            .map(i => {
-              return `<div class="country-list_flag"><img src="${i.flags.svg}" alt="" width="32" /><div class="country-list_title">${i.name.common}</div></div>`;
-            })
-            .join('');
-        } else {
-          countryListEl.innerHTML = '';
-          countryListEl.nextElementSibling.innerHTML = `<div class="country-info_flag"><img src="${
-            country[0].flags.svg
-          }" alt="" width="32" /><div class="country-info_title">${
-            country[0].name.common
-          }</div></div><div class="country-info_description"><b>Capital:</b> ${
-            country[0].capital[0]
-          }</div><div class="country-info_description"><b>Population:</b> ${
-            country[0].population
-          }</div><div class="country-info_description"><b>Languages:</b> ${
-            Object.values(country[0].languages)[0]
-          }</div>`;
+import { fetchCountries } from './fetchCountries.js';
+import Notiflix from 'notiflix';
+const searchBox = document.getElementById('search-box');
+const countryList = document.getElementById('country-list');
+const renderCountry = (country) => {
+    const listItem = document.createElement('li');
+    const languages = country.languages.map(lang => lang.name).join(', ');
+    listItem.innerHTML = `
+        <div>
+            <img src="${country.flags.svg}" alt="Flag" style="width: 30px; height: 20px;">
+        </div>
+        <div>
+            <h3>${country.name.official}</h3>
+            <p><strong>Capital:</strong> ${country.capital}</p>
+            <p><strong>Population:</strong> ${country.population}</p>
+            <p><strong>Languages:</strong> ${languages}</p>
+        </div>
+    `;
+    countryList.appendChild(listItem);
+};
+const clearCountryList = () => {
+    countryList.innerHTML = '';
+};
+const handleFetchError = (error) => {
+    if (error.status === 404) {
+        Notiflix.Notify.failure('Oops, there is no country with that name');
+    } else {
+        console.error('Error fetching data:', error);
+    }
+};
+const fetchCountryData = _.debounce(async (searchQuery) => {
+    if (searchQuery.trim() === '') {
+        clearCountryList();
+        return;
+    }
+    try {
+        const countries = await fetchCountries(searchQuery);
+        clearCountryList();
+        if (countries.length > 10) {
+            Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
+        } else if (countries.length > 1 && countries.length <= 10) {
+            countries.forEach(country => renderCountry(country));
+        } else if (countries.length === 1) {
+            renderCountry(countries[0]);
         }
-      })
-      .catch(error => {
-        Notify.failure('Oops, there is no country with that name');
-        countryListEl.innerHTML = '';
-        countryListEl.nextElementSibling.innerHTML = '';
-      });
-  }
-}
+    } catch (error) {
+        handleFetchError(error);
+    }
+}, 300);
+searchBox.addEventListener('input', (event) => {
+    const searchQuery = event.target.value.trim();
+    fetchCountryData(searchQuery);
+});
