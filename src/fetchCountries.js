@@ -8,8 +8,6 @@ function fetchCountries(name) {
       }
       return response.json();
     })
-    .then(countries => { 
-    })
     .catch(error => {
       
       console.error('Błąd:', error);
@@ -17,4 +15,4 @@ function fetchCountries(name) {
     });
 }
 
-module.exports = fetchCountries;
+export function fetchCountries(name){};

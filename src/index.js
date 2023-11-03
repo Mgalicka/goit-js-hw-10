@@ -1,5 +1,6 @@
 import { fetchCountries } from './fetchCountries.js';
 import Notiflix from 'notiflix';
+import debounce from 'lodash/debounce';
 const searchBox = document.getElementById('search-box');
 const countryList = document.getElementById('country-list');
 const renderCountry = (country) => {
@@ -28,26 +29,26 @@ const handleFetchError = (error) => {
         console.error('Error fetching data:', error);
     }
 };
-const fetchCountryData = _.debounce(async (searchQuery) => {
-    if (searchQuery.trim() === '') {
-        clearCountryList();
-        return;
+try {
+    const countries = await fetchCountries(searchQuery);
+    clearCountryList();
+    if (countries.length > 10) {
+        Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
+    } else if (countries.length > 1 && countries.length <= 10) {
+        countries.forEach(country => renderCountry(country));
+    } else if (countries.length === 1) {
+        renderCountry(countries[0]);
     }
-    try {
-        const countries = await fetchCountries(searchQuery);
-        clearCountryList();
-        if (countries.length > 10) {
-            Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
-        } else if (countries.length > 1 && countries.length <= 10) {
-            countries.forEach(country => renderCountry(country));
-        } else if (countries.length === 1) {
-            renderCountry(countries[0]);
-        }
-    } catch (error) {
-        handleFetchError(error);
-    }
-}, 300);
-searchBox.addEventListener('input', (event) => {
+} catch (error) {
+    handleFetchError(error);
+}
+const onSearchInput = event => {
+    event.preventDefault();
     const searchQuery = event.target.value.trim();
+    if (searchQuery.trim() === '') {
+      clearCountryList();
+      return;
+    }
     fetchCountryData(searchQuery);
-});
+  };
+  searchBox.addEventListener('input', debounce(onSearchInput, 300));
