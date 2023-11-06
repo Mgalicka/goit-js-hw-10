@@ -176,7 +176,7 @@ c=setTimeout(y,(t=n-m,i=n-p,a=e-t,x?B(a,o-i):a))}function k(t){return(// Only in
 (c=void 0,u&&a)?g(t):(a=n=void 0,l))}function w(){var t,i=s(),o=b(i);if(a=arguments,n=this,m=i,o){if(void 0===c)return(// Reset any `maxWait` timer.
 p=t=m,// Start the timer for the trailing edge.
 c=setTimeout(y,e),d?g(t):l);if(x)return(// Handle invocations in a tight loop.
-clearTimeout(c),c=setTimeout(y,e),g(m))}return void 0===c&&(c=setTimeout(y,e)),l}return e=f(e)||0,r(i)&&(d=!!i.leading,o=(x="maxWait"in i)?T(f(i.maxWait)||0,e):o,u="trailing"in i?!!i.trailing:u),w.cancel=function(){void 0!==c&&clearTimeout(c),p=0,a=m=n=c=void 0},w.flush=function(){return void 0===c?l:k(s())},w};let X=document.getElementById("search-box"),D=document.querySelector(".country-list"),E=t=>{let e=document.createElement("li"),i=object.values(t.languages).join(", ");e.innerHTML=`
+clearTimeout(c),c=setTimeout(y,e),g(m))}return void 0===c&&(c=setTimeout(y,e)),l}return e=f(e)||0,r(i)&&(d=!!i.leading,o=(x="maxWait"in i)?T(f(i.maxWait)||0,e):o,u="trailing"in i?!!i.trailing:u),w.cancel=function(){void 0!==c&&clearTimeout(c),p=0,a=m=n=c=void 0},w.flush=function(){return void 0===c?l:k(s())},w};let X=document.getElementById("search-box"),D=document.querySelector(".country-list"),E=t=>{let e=document.createElement("li"),i=Object.values(t.languages).join(", ");e.innerHTML=`
         <div>
             <img src="${t.flags.svg}" alt="Flag" style="width: 30px; height: 20px;">
         </div>
@@ -186,6 +186,6 @@ clearTimeout(c),c=setTimeout(y,e),g(m))}return void 0===c&&(c=setTimeout(y,e)),l
             <p><strong>Population:</strong> ${t.population}</p>
             <p><strong>Languages:</strong> ${i}</p>
         </div>
-    `,D.appendChild(e)},F=()=>{D.innerHTML=""},j=e=>{404===e.status?/*@__PURE__*/t(n).Notify.failure("Oops, there is no country with that name"):console.error("Error fetching data:",e)},O=async e=>{try{let i=await function(t){let e=`https://restcountries.com/v3.1/name/${t}`;return fetch(e).then(t=>{if(!t.ok)throw Error("Country not found");return t.json()}).catch(t=>{throw console.error("Błąd:",t),t})}(e);F(),i.length>10?/*@__PURE__*/t(n).Notify.info("Too many matches found. Please enter a more specific name."):i.length>1&&i.length<=10?i.forEach(t=>E(t)):1===i.length&&E(i[0])}catch(t){j(t)}};X.addEventListener("input",/*@__PURE__*/t(o)(t=>{t.preventDefault();let e=t.target.value.trim();if(""===e.trim()){F();return}O(e)},300))}();//# sourceMappingURL=index.5685a235.js.map
+    `,D.appendChild(e)},F=()=>{D.innerHTML=""},j=e=>{404===e.status?/*@__PURE__*/t(n).Notify.failure("Oops, there is no country with that name"):console.error("Error fetching data:",e)},O=async e=>{try{let i=await function(t){let e=`https://restcountries.com/v3.1/name/${t}`;return fetch(e).then(t=>{if(!t.ok)throw Error("Country not found");return t.json()}).catch(t=>{throw console.error("Błąd:",t),t})}(e);F(),i.length>10?/*@__PURE__*/t(n).Notify.info("Too many matches found. Please enter a more specific name."):i.length>1&&i.length<=10?i.forEach(t=>E(t)):1===i.length&&E(i[0])}catch(t){j(t)}};X.addEventListener("input",/*@__PURE__*/t(o)(t=>{t.preventDefault();let e=t.target.value.trim();if(""===e.trim()){F();return}O(e)},300))}();//# sourceMappingURL=index.4a8911d4.js.map
 
-//# sourceMappingURL=index.5685a235.js.map
+//# sourceMappingURL=index.4a8911d4.js.map
