@@ -2,7 +2,7 @@ import { fetchCountries } from './fetchCountries.js';
 import Notiflix from 'notiflix';
 import debounce from 'lodash/debounce';
 const searchBox = document.getElementById('search-box');
-const countryList = document.getElementById('country-list');
+const countryList = document.queryselector('.country-list');
 const renderCountry = (country) => {
     const listItem = document.createElement('li');
     const languages = object.values(country.languages).join(', ');
@@ -43,7 +43,7 @@ const fetchCountryData = async (searchQuery) => {
     } catch (error) {
         handleFetchError(error);
     }
-
+}
 const onSearchInput = event => {
     event.preventDefault();
     const searchQuery = event.target.value.trim();
