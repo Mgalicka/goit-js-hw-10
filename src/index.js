@@ -5,7 +5,7 @@ const searchBox = document.getElementById('search-box');
 const countryList = document.getElementById('country-list');
 const renderCountry = (country) => {
     const listItem = document.createElement('li');
-    const languages = country.languages.map(lang => lang.name).join(', ');
+    const languages = object.values(country.languages).join(', ');
     listItem.innerHTML = `
         <div>
             <img src="${country.flags.svg}" alt="Flag" style="width: 30px; height: 20px;">
@@ -29,19 +29,21 @@ const handleFetchError = (error) => {
         console.error('Error fetching data:', error);
     }
 };
-try {
-    const countries = await fetchCountries(searchQuery);
-    clearCountryList();
-    if (countries.length > 10) {
-        Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
-    } else if (countries.length > 1 && countries.length <= 10) {
-        countries.forEach(country => renderCountry(country));
-    } else if (countries.length === 1) {
-        renderCountry(countries[0]);
+const fetchCountryData = async (searchQuery) => {
+    try {
+        const countries = await fetchCountries(searchQuery);
+        clearCountryList();
+        if (countries.length > 10) {
+            Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
+        } else if (countries.length > 1 && countries.length <= 10) {
+            countries.forEach(country => renderCountry(country));
+        } else if (countries.length === 1) {
+            renderCountry(countries[0]);
+        }
+    } catch (error) {
+        handleFetchError(error);
     }
-} catch (error) {
-    handleFetchError(error);
-}
+
 const onSearchInput = event => {
     event.preventDefault();
     const searchQuery = event.target.value.trim();
